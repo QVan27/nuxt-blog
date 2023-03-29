@@ -1,9 +1,19 @@
 <template>
-  <div class="section">
+  <section class="section">
     <div class="section__container">
       <h1>Liste des articles</h1>
-      <ul>
-        <li v-for="article in articles" :key="article.id">
+      <TransitionGroup
+        tag="ul"
+        :css="false"
+        @before-enter="onBeforeEnter"
+        @enter="onEnter"
+        @leave="onLeave"
+      >
+        <li
+          v-for="(article, index) in articles"
+          :key="article.id"
+          :data-index="index"
+        >
           <NuxtLink :to="`/articles/${article.id}`">
             <div
               class="section__container-item"
@@ -11,8 +21,8 @@
             >
               <div v-bind:class="'context-menu context-menu-' + article.id">
                 <ul>
-                  <li v-if="role === 'admin'" @click="deleteArticle">Delete</li>
-                  <li @click="addComment">Add comment</li>
+                  <li v-if="role === 'admin'">Delete</li>
+                  <li>Add comment</li>
                 </ul>
               </div>
               <h2>{{ article.title }}</h2>
@@ -21,13 +31,14 @@
             </div>
           </NuxtLink>
         </li>
-      </ul>
+      </TransitionGroup>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import gsap from 'gsap'
 
 export default Vue.extend({
   name: 'Articles',
@@ -60,13 +71,26 @@ export default Vue.extend({
 
       if (contextMenu) contextMenu.classList.toggle('active')
     },
-
-    deleteArticle() {
-      //   this.$emit('deleteArticle')
+    onBeforeEnter(el: any) {
+      gsap.set(el, { opacity: 0, scale: 0 })
     },
-
-    addComment() {
-      //   this.$emit('addComment')
+    onEnter(el: any, done: any) {
+      gsap.to(el, {
+        opacity: 1,
+        scale: 1,
+        delay: el.dataset.index * 0.15,
+        onComplete: done,
+      })
+      done()
+    },
+    onLeave(el: any, done: any) {
+      gsap.to(el, {
+        opacity: 0,
+        scale: 0,
+        delay: el.dataset.index * 0.15,
+        onComplete: done,
+      })
+      done()
     },
   },
 })
