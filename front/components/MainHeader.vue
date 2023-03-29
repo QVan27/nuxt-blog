@@ -4,10 +4,42 @@
       <nav>
         <NuxtLink to="/">Accueil</NuxtLink>
         <NuxtLink to="/articles">Articles</NuxtLink>
+        <NuxtLink v-if="!role" to="/login">Connexion</NuxtLink>
+        <a class="logout" v-else @click="logout">Déconnexion</a>
       </nav>
     </div>
   </header>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
+  name: 'MainHeader',
+  data() {
+    return {
+      role: '',
+    }
+  },
+  mounted() {
+    this.checkRole()
+  },
+  methods: {
+    checkRole() {
+      if (localStorage.getItem('role')) {
+        localStorage.getItem('role') === 'admin'
+          ? (this.role = 'admin')
+          : (this.role = 'user')
+      }
+    },
+    logout() {
+      localStorage.removeItem('role')
+      this.role = ''
+      this.$router.push('/')
+    },
+  },
+})
+</script>
 
 <style lang="scss">
 header {
@@ -29,21 +61,27 @@ header {
   }
 
   nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
     a {
       color: #fff;
-      margin-left: 1rem;
       text-decoration: none;
       transition: color 0.5s ease-out;
 
       &:hover {
-        color: #00DC82;
+        color: #00dc82;
       }
 
       &.nuxt-link-exact-active.nuxt-link-active {
-        color: #00DC82;
+        color: #00dc82;
+      }
+
+      &.logout {
+        cursor: pointer;
       }
     }
-
   }
 }
 </style>

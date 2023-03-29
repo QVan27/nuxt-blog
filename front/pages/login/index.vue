@@ -1,6 +1,5 @@
-<!-- create a login page check for name and password, once you are connect stock role in local -->
 <template>
-  <div>
+  <section class="section">
     <h1>Login</h1>
     <form>
       <label for="name">Nom</label>
@@ -9,7 +8,7 @@
       <input type="password" id="password" name="password" v-model="password" />
       <button type="submit" @click="login">Connexion</button>
     </form>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -25,7 +24,15 @@ export default Vue.extend({
   },
   methods: {
     login() {
-      
+      if (this.name === 'quentin' && this.password === 'admin') {
+        localStorage.setItem('role', 'admin')
+        this.$router.push('/')
+      } else if (this.name === 'natty' && this.password === 'user') {
+        localStorage.setItem('role', 'user')
+        this.$router.push('/')
+      } else {
+        alert('Wrong name or password')
+      }
     },
   },
 })
