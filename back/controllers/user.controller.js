@@ -3,6 +3,7 @@ const User = require('../Models/User.mysql');
 exports.create = async function (req, res) {
     const users = new User({
         name: req.body.name,
+        password: req.body.password,
         role: req.body.role,
     });
 
@@ -44,6 +45,7 @@ exports.getOne = async function (req, res) {
 exports.updateById = async function (req, res) {
     const user = new User({
         name: req.body.name,
+        password: req.body.password,
         role: req.body.role,
     });
 

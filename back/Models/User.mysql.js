@@ -2,6 +2,7 @@ const sql = require('../config/mysql');
 
 const User = function (User) {
     this.name = User.title;
+    this.password = User.password;
     this.role = User.author;
 }
 
@@ -37,7 +38,7 @@ User.getOne = (id, result) => {
 
 User.updateById = (id, User, result) => {
     sql.query(`UPDATE User SET name = ? ,  role = ?  WHERE id = ${id} `,
-        [User.name, User.role], (err, res) => {
+        [User.name, User.password, User.role], (err, res) => {
             if (err) {
                 result(err, null);
                 return;
